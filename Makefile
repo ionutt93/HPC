@@ -1,10 +1,11 @@
 # Makefile
 
-EXE1=d2q9-bgk.exe
-EXES=$(EXE1)
+EXE1 = d2q9-bgk.exe
+EXES = $(EXE1)
 
-CC=gcc
-CFLAGS=-lm -Wall -DDEBUG
+TCC = tau_cc.sh
+CC = gcc-4.9
+CFLAGS = -lm -fopenmp -Wall -DDEBUG
 
 all: $(EXES)
 

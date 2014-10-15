@@ -1,0 +1,13 @@
+#PBS -N CW1
+#PBS -o OUT
+
+#PBS -l nodes=1:ppn=1,walltime=00:05:00
+#PBS -q hpc-course
+#PBS -m ae -M it12754@my.bris.ac.uk
+
+application="./d2q9-bgk.exe"
+options=""
+
+######################
+cd $PBS_O_WORKDIR
+$application $options
