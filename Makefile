@@ -5,7 +5,7 @@ EXES = $(EXE1)
 
 TCC = tau_cc.sh
 CC = gcc-4.9
-CFLAGS = -lm -fopenmp -Wall -DDEBUG
+CFLAGS = -O2 -lm -fopenmp -Wall -DDEBUG
 
 all: $(EXES)
 

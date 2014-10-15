@@ -154,7 +154,7 @@ int main(int argc, char* argv[])
   gettimeofday(&timstr,NULL);
   tic=timstr.tv_sec+(timstr.tv_usec/1000000.0);
 
-  omp_set_num_threads(16);
+  omp_set_num_threads(omp_get_num_procs());
 
   for (ii=0;ii<params.maxIters;ii++) {
     timestep(params,cells,tmp_cells,obstacles);
@@ -551,6 +551,7 @@ double av_velocity(const t_param params, t_speed* cells, int* obstacles)
   tot_u = 0.0;
 
   /* loop over all non-blocked cells */
+  #pragma omp parallel for reduction(+:tot_cells) reduction(+:tot_u) private(ii, jj, kk, local_density, u_x, u_y) firstprivate(cells, obstacles) default(none)
   for(ii=0;ii<params.ny;ii++) {
     for(jj=0;jj<params.nx;jj++) {
       /* ignore occupied cells */
@@ -579,7 +580,8 @@ double av_velocity(const t_param params, t_speed* cells, int* obstacles)
 	/* accumulate the norm of x- and y- velocity components */
        tot_u += sqrt((u_x * u_x) + (u_y * u_y));
 	/* increase counter of inspected cells */
-       ++tot_cells;
+       
+        ++tot_cells;
      }
    }
  }
