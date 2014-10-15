@@ -232,7 +232,7 @@ int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells)
   int x_e,x_w,y_n,y_s;  /* indices of neighbouring cells */
 
   /* loop over _all_ cells */
-  #pragma omp parallel for private(ii, jj, x_e, x_w, y_n, y_s) firstprivate(cells, tmp_cells) default(none)
+  #pragma omp parallel for private(ii, jj, x_e, x_w, y_n, y_s) shared(cells, tmp_cells) default(none)
   for(ii=0;ii<params.ny;ii++) {
     for(jj=0;jj<params.nx;jj++) {
       /* determine indices of axis-direction neighbours
@@ -304,7 +304,7 @@ int collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obs
   ** the propagate step and so values of interest
   ** are in the scratch-space grid */
   // private(u_x, u_y, u, d_equ, u_sq, local_density)
-  #pragma omp parallel for private(u_x, u_y, u, d_equ, u_sq, local_density, jj, ii, kk) firstprivate(tmp_cells, cells, obstacles) default(none)
+  #pragma omp parallel for private(u_x, u_y, u, d_equ, u_sq, local_density, jj, ii, kk) shared(tmp_cells, cells, obstacles) default(none)
   for(ii=0;ii<params.ny;ii++) {
     for(jj=0;jj<params.nx;jj++) {
       /* don't consider occupied cells */
@@ -552,7 +552,7 @@ double av_velocity(const t_param params, t_speed* cells, int* obstacles)
   tot_u = 0.0;
 
   /* loop over all non-blocked cells */
-  #pragma omp parallel for reduction(+:tot_cells) reduction(+:tot_u) private(ii, jj, kk, local_density, u_x, u_y) firstprivate(cells, obstacles) default(none)
+  #pragma omp parallel for reduction(+:tot_cells) reduction(+:tot_u) private(ii, jj, kk, local_density, u_x, u_y) shared(cells, obstacles) default(none)
   for(ii=0;ii<params.ny;ii++) {
     for(jj=0;jj<params.nx;jj++) {
       /* ignore occupied cells */
@@ -602,6 +602,7 @@ double total_density(const t_param params, t_speed* cells)
   int ii,jj,kk;        /* generic counters */
   double total = 0.0;  /* accumulator */
 
+  #pragma omp parallel for private(ii, jj, kk) shared(cells) reduction(+:total) default(none)
   for(ii=0;ii<params.ny;ii++) {
     for(jj=0;jj<params.nx;jj++) {
       for(kk=0;kk<NSPEEDS;kk++) {
