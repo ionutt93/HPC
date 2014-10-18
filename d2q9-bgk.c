@@ -93,11 +93,11 @@ int initialise(const char* paramfile, const char* obstaclefile,
 ** timestep calls, in order, the functions:
 ** accelerate_flow(), propagate(), rebound() & collision()
 */
-int timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
-int accelerate_flow(const t_param params, t_speed* cells, int* obstacles);
-int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells);
-int rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
-int collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
+void timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles); //made void ------------------------------------
+void accelerate_flow(const t_param params, t_speed* cells, int* obstacles);
+void propagate(const t_param params, t_speed* cells, t_speed* tmp_cells);
+void rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
+void collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles);
 int write_values(const t_param params, t_speed* cells, int* obstacles, double* av_vels);
 
 /* finalise, including freeing up allocated memory */
@@ -185,16 +185,15 @@ int main(int argc, char* argv[])
   return EXIT_SUCCESS;
 }
 
-int timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles)
+void timestep(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles)
 {
   accelerate_flow(params,cells,obstacles);
   propagate(params,cells,tmp_cells);
   rebound(params,cells,tmp_cells,obstacles);
-  collision(params,cells,tmp_cells,obstacles);
-  return EXIT_SUCCESS; 
+  collision(params,cells,tmp_cells,obstacles); 
 }
 
-int accelerate_flow(const t_param params, t_speed* cells, int* obstacles)
+void accelerate_flow(const t_param params, t_speed* cells, int* obstacles)
 {
   int ii,jj;     /* generic counters */
   double w1,w2;  /* weighting factors */
@@ -223,10 +222,9 @@ int accelerate_flow(const t_param params, t_speed* cells, int* obstacles)
   }
 }
 
-return EXIT_SUCCESS;
 }
 
-int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells)
+void propagate(const t_param params, t_speed* cells, t_speed* tmp_cells)
 {
   int ii,jj;            /* generic counters */
   int x_e,x_w,y_n,y_s;  /* indices of neighbouring cells */
@@ -256,11 +254,9 @@ int propagate(const t_param params, t_speed* cells, t_speed* tmp_cells)
       tmp_cells[y_s*params.nx + x_e].speeds[8] = cells[ii*params.nx + jj].speeds[8]; /* south-east */      
     }
   }
-
-  return EXIT_SUCCESS;
 }
 
-int rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles)
+void rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles)
 {
   int ii,jj;  /* generic counters */
 
@@ -282,11 +278,9 @@ int rebound(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obsta
      }
    }
  }
-
- return EXIT_SUCCESS;
 }
 
-int collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles)
+void collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obstacles)
 {
   int ii,jj,kk;                 /* generic counters */
   const double c_sq = 1.0/3.0;  /* square of speed of sound */
@@ -391,8 +385,6 @@ int collision(const t_param params, t_speed* cells, t_speed* tmp_cells, int* obs
      }
    }
  }
-
- return EXIT_SUCCESS; 
 }
 
 int initialise(const char* paramfile, const char* obstaclefile,
