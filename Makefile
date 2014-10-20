@@ -5,12 +5,12 @@ EXES = $(EXE1)
 
 TCC = tau_cc.sh
 CC = gcc-4.9
-CFLAGS = -ffast-math -O3 -lm -fopenmp -Wall -DDEBUG
+CFLAGS = -Ofast -fopenmp -lm -Wall
 
 all: $(EXES)
 
 $(EXES): %.exe : %.c
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $^ -o $@
 
 .PHONY: all clean
 
